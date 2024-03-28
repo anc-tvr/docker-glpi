@@ -1,83 +1,83 @@
-# Project to deploy GLPI with docker
+# Проект по развертыванию GLPI с помощью докера
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/diouxx/glpi) ![Docker Stars](https://img.shields.io/docker/stars/diouxx/glpi) [![](https://images.microbadger.com/badges/image/diouxx/glpi.svg)](http://microbadger.com/images/diouxx/glpi "Get your own image badge on microbadger.com") ![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/diouxx/glpi)
 
-# Table of Contents
+# Оглавление
 - [Project to deploy GLPI with docker](#project-to-deploy-glpi-with-docker)
 - [Table of Contents](#table-of-contents)
 - [Introduction](#introduction)
   - [Default accounts](#default-accounts)
-- [Deploy with CLI](#deploy-with-cli)
-  - [Deploy GLPI](#deploy-glpi)
-  - [Deploy GLPI with existing database](#deploy-glpi-with-existing-database)
-  - [Deploy GLPI with database and persistence data](#deploy-glpi-with-database-and-persistence-data)
-  - [Deploy a specific release of GLPI](#deploy-a-specific-release-of-glpi)
-- [Deploy with docker-compose](#deploy-with-docker-compose)
-  - [Deploy without persistence data ( for quickly test )](#deploy-without-persistence-data--for-quickly-test-)
-  - [Deploy a specific release](#deploy-a-specific-release)
-  - [Deploy with persistence data](#deploy-with-persistence-data)
+- [Развертывание при помощи CLI](#deploy-with-cli)
+  - [Развертывание GLPI](#deploy-glpi)
+  - [Развертывание GLPI с существующей базой данных](#deploy-glpi-with-existing-database)
+  - [Развертывание GLPI с базой данных и постоянными данными](#deploy-glpi-with-database-and-persistence-data)
+  - [Развертывание конкретной версии GLPI](#deploy-a-specific-release-of-glpi)
+- [Развертывание при помощи docker-compose](#deploy-with-docker-compose)
+  - [Развертывание без сохраняемых данных (только для быстрого тестирования!)](#deploy-without-persistence-data--for-quickly-test-)
+  - [Развертывание определенного релиза](#deploy-a-specific-release)
+  - [Развертывание с постоянными данными для контейнера](#deploy-with-persistence-data)
     - [mariadb.env](#mariadbenv)
     - [docker-compose .yml](#docker-compose-yml)
-- [Environnment variables](#environnment-variables)
+- [Переменные среды](#environnment-variables)
   - [TIMEZONE](#timezone)
 
-# Introduction
+# Введение
 
-Install and run an GLPI instance with docker
+Установка и запуск GLPI в docker-контейнере.
 
-## Default accounts
+## Аккаунты по умолчанию
 
-More info in the 📄[Docs](https://glpi-install.readthedocs.io/en/latest/install/wizard.html#end-of-installation)
+Подробнее тут - 📄[Docs](https://glpi-install.readthedocs.io/en/latest/install/wizard.html#end-of-installation)
 
 | Login/Password     	| Role              	|
 |--------------------	|-------------------	|
-| glpi/glpi          	| admin account     	|
+| glpi/glpi          	| аккаунт админа     	|
 | tech/tech          	| technical account 	|
 | normal/normal      	| "normal" account  	|
 | post-only/postonly 	| post-only account 	|
 
-# Deploy with CLI
+# Развертывание при помощи CLI
 
-## Deploy GLPI 
+## Развертывание GLPI
 ```sh
 docker run --name mariadb -e MARIADB_ROOT_PASSWORD=diouxx -e MARIADB_DATABASE=glpidb -e MARIADB_USER=glpi_user -e MARIADB_PASSWORD=glpi -d mariadb:10.7
 docker run --name glpi --link mariadb:mariadb -p 80:80 -d diouxx/glpi
 ```
 
-## Deploy GLPI with existing database
+## Развертывание GLPI с существующей базой данных
 ```sh
 docker run --name glpi --link yourdatabase:mariadb -p 80:80 -d diouxx/glpi
 ```
 
-## Deploy GLPI with database and persistence data
+## Развертывание GLPI с базой данных и постоянными данными
 
-For an usage on production environnement or daily usage, it's recommanded to use container with volumes to persistent data.
+Для использования в проде или постоянного использования на живом сервере, рекомендуется использовать контейнер с томами для постоянных данных.
 
-* First, create MariaDB container with volume
+* Сначала необходимо создать контейнер MariaDB с постоянным томом
 
 ```sh
 docker run --name mariadb -e MARIADB_ROOT_PASSWORD=diouxx -e MARIADB_DATABASE=glpidb -e MARIADB_USER=glpi_user -e MARIADB_PASSWORD=glpi --volume /var/lib/mysql:/var/lib/mysql -d mariadb:10.7
 ```
 
-* Then, create GLPI container with volume and link MariaDB container
+* Далее создаём контейнер GLPI с постоянным томом и связываем его с контейнером MariaDB.
 
 ```sh
 docker run --name glpi --link mariadb:mariadb --volume /var/www/html/glpi:/var/www/html/glpi -p 80:80 -d diouxx/glpi
 ```
 
-Enjoy :)
+Наслаждаемся результатом :)
 
-## Deploy a specific release of GLPI
-Default, docker run will use the latest release of GLPI.
-For an usage on production environnement, it's recommanded to set specific release.
-Here an example for release 9.1.6 :
+## Развертывание конкретной версии GLPI
+По умолчанию при запуске Docker будет использоваться последняя версия GLPI.
+Для использования в проде рекомендуется установить конкретную версию.
+Вот пример для версии 10.0.14 :
 ```sh
-docker run --name glpi --hostname glpi --link mariadb:mariadb --volume /var/www/html/glpi:/var/www/html/glpi -p 80:80 --env "VERSION_GLPI=9.1.6" -d diouxx/glpi
+docker run --name glpi --hostname glpi --link mariadb:mariadb --volume /var/www/html/glpi:/var/www/html/glpi -p 80:80 --env "VERSION_GLPI=10.0.14" -d diouxx/glpi
 ```
 
-# Deploy with docker-compose
+# Развертывание при помощи docker-compose
 
-## Deploy without persistence data ( for quickly test )
+## Развертывание без сохраняемых данных (только для быстрого тестирования!)
 ```yaml
 version: "3.8"
 
@@ -102,7 +102,7 @@ services:
       - "80:80"
 ```
 
-## Deploy a specific release
+## Развертывание определенного релиза
 
 ```yaml
 version: "3.8"
@@ -125,15 +125,14 @@ services:
     container_name : glpi
     hostname: glpi
     environment:
-      - VERSION_GLPI=9.5.6
+      - VERSION_GLPI=10.0.14
     ports:
       - "80:80"
 ```
 
-## Deploy with persistence data
-
-To deploy with docker compose, you use *docker-compose.yml* and *mariadb.env* file.
-You can modify **_mariadb.env_** to personalize settings like :
+## Развертывание с постоянными данными для контейнера
+Для развертывания с помощью Docker Compose используются файлы *docker-compose.yml* и *mariadb.env*.
+Перед запуском необходимо изменить **_mariadb.env_**, чтобы персонализировать такие параметры, как:
 
 * MariaDB root password
 * GLPI database
@@ -143,7 +142,7 @@ You can modify **_mariadb.env_** to personalize settings like :
 
 ### mariadb.env
 ```
-MARIADB_ROOT_PASSWORD=diouxx
+MARIADB_ROOT_PASSWORD=password
 MARIADB_DATABASE=glpidb
 MARIADB_USER=glpi_user
 MARIADB_PASSWORD=glpi
@@ -181,25 +180,23 @@ services:
     restart: always
 ```
 
-To deploy, just run the following command on the same directory as files
+Для развертывания необходимо просто запустить следующую команду в том же каталоге, что и файлы :
 
 ```sh
 docker-compose up -d
 ```
 
-# Environnment variables
+# Переменные среды
 
 ## TIMEZONE
-If you need to set timezone for Apache and PHP
+Если вам необходимо установить часовой пояс для Apache и PHP
 
-From commande line
+При запуске из коносоли :
 ```sh
 docker run --name glpi --hostname glpi --link mariadb:mariadb --volumes-from glpi-data -p 80:80 --env "TIMEZONE=Europe/Moscow" -d diouxx/glpi
 ```
 
-From docker-compose
-
-Modify this settings
+Если запуск идёт помощи docker-compose, изменяем эти настройки :
 ```yaml
 environment:
      TIMEZONE=Europe/Moscow
