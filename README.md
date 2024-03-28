@@ -177,7 +177,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /var/www/html/glpi/:/var/www/html/glpi
     environment:
-      - TIMEZONE=Europe/Brussels
+      - TIMEZONE=Europe/Moscow
     restart: always
 ```
 
@@ -194,7 +194,7 @@ If you need to set timezone for Apache and PHP
 
 From commande line
 ```sh
-docker run --name glpi --hostname glpi --link mariadb:mariadb --volumes-from glpi-data -p 80:80 --env "TIMEZONE=Europe/Brussels" -d diouxx/glpi
+docker run --name glpi --hostname glpi --link mariadb:mariadb --volumes-from glpi-data -p 80:80 --env "TIMEZONE=Europe/Moscow" -d diouxx/glpi
 ```
 
 From docker-compose
@@ -202,5 +202,5 @@ From docker-compose
 Modify this settings
 ```yaml
 environment:
-     TIMEZONE=Europe/Brussels
+     TIMEZONE=Europe/Moscow
 ```
