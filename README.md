@@ -27,7 +27,7 @@
 
 ## Аккаунты по умолчанию
 
-Подробнее тут - 📄[Docs](https://glpi-install.readthedocs.io/en/latest/install/wizard.html#end-of-installation)
+Подробнее тут - 📄[Документация](https://glpi-install.readthedocs.io/en/latest/install/wizard.html#end-of-installation)
 
 | Login/Password     	| Role              	|
 |--------------------	|-------------------	|
