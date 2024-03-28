@@ -3,10 +3,10 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/diouxx/glpi) ![Docker Stars](https://img.shields.io/docker/stars/diouxx/glpi) [![](https://images.microbadger.com/badges/image/diouxx/glpi.svg)](http://microbadger.com/images/diouxx/glpi "Get your own image badge on microbadger.com") ![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/diouxx/glpi)
 
 # Оглавление
-- [Project to deploy GLPI with docker](#project-to-deploy-glpi-with-docker)
-- [Table of Contents](#table-of-contents)
-- [Introduction](#introduction)
-  - [Default accounts](#default-accounts)
+- [Проект по развертыванию GLPI с помощью докера](#project-to-deploy-glpi-with-docker)
+- [Оглавление](#Оглавление)
+- [Введение](#Введение)
+  - [Аккаунты по умолчанию](#Аккаунты-по-умолчанию)
 - [Развертывание при помощи CLI](#deploy-with-cli)
   - [Развертывание GLPI](#deploy-glpi)
   - [Развертывание GLPI с существующей базой данных](#deploy-glpi-with-existing-database)
